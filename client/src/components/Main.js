@@ -1,34 +1,46 @@
 import { useEffect, useRef, useState } from "react";
 import { useWebSocket } from "react-use-websocket/dist/lib/use-websocket";
+import MessageWindow from "./messagewindow/MessageWindow";
+import UserList from "./UserList";
 
 const Main = props => {
   const [users, setUsers] = useState([]);
+  const [selected, setSelected] = useState(null);
   const readyRef = useRef(false);
 
   useEffect(() => {
     if (readyRef.current) return;
     readyRef.current = true;
     sendJsonMessage({"ready": 1});
-  }, []);
+  });
 
   const { sendJsonMessage } = useWebSocket(process.env.REACT_APP_WS_URL, {
     share: true,
-    onMessage: e => {
-      const event = JSON.parse(e.data);
-      console.log(event);
-      // TODO: for sake of time, not filtering out event.type users, do this later
-      setUsers(event.value);
+    onMessage: m => {
+      const event = JSON.parse(m.data);
+      if (event.type === "users") {
+        console.log(event);
+        setUsers(event.value);
+      }
+    },
+    filter: m => {
+      const event = JSON.parse(m.data);
+      return event.type === "users";
     }
   });
 
   return (
-    <ul>
-    {users.map((user, idx) => 
-      <li key={idx}>
-        {user}
-      </li>
-    )}
-    </ul>
+    <div className="flex flex-row gap-6">
+      <UserList
+        users={users.filter(user => user !== props.name)}
+        onSelect={name => setSelected(name)}
+        selected={selected}
+      />
+      <MessageWindow 
+        name={props.name}
+        selected={selected}
+      />
+    </div>
   );
 }
 

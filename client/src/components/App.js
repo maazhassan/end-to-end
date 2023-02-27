@@ -12,15 +12,15 @@ const App = () => {
     onOpen: () => {
       console.log("Websocket connection established.");
     },
-    onMessage: e => {
-      const event = JSON.parse(e.data);
+    onMessage: m => {
+      const event = JSON.parse(m.data);
       if (event.type === "register") {
         console.log(event);
         setUserID(event.id);
       }
     },
-    filter: message => {
-      const event = JSON.parse(message.data);
+    filter: m => {
+      const event = JSON.parse(m.data);
       return event.type === "register";
     }
   });

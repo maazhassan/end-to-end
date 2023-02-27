@@ -37,7 +37,7 @@ async def messages(websocket):
             websockets.broadcast(CLIENTS.values(), users_event())
         currID += 1
         
-        # Manage state changes
+        # Listen to incoming messages
         async for message in websocket:
             print(f"recieved message from {name}: {message}")
     
