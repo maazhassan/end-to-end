@@ -20,9 +20,9 @@ async def messages(websocket):
         name = ""
         name = await websocket.recv()
         name = json.loads(name)["name"]
-        if (name in CLIENTS.keys() or numClients == 10):
-            await websocket.send(register_event(-1))
-            print(f"Duplicate client {name} or user capacity reached. Closing connection...")
+        if (name in CLIENTS.keys()):
+            await websocket.send(register_event(-2))
+            print(f"Duplicate client {name}. Closing connection...")
             name = ""
             return
         
@@ -40,7 +40,8 @@ async def messages(websocket):
         # Listen to incoming messages
         async for message in websocket:
             print(f"recieved message from {name}: {message}")
-            websockets.send()
+            out = [CLIENTS[name], CLIENTS[json.loads(message)["to"]]]
+            websockets.broadcast(out, message)
     
     except websockets.exceptions.ConnectionClosedOK:
         print("Connection closed without errors.")

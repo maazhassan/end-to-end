@@ -3,7 +3,7 @@ import MessageInput from "./MessageInput";
 
 const MessageWindow = props => {
   return (
-    <div>
+    <div className="w-[435px]">
       <MessageDisplay 
         name={props.name}
         selected={props.selected}

@@ -1,17 +1,15 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useWebSocket } from "react-use-websocket/dist/lib/use-websocket";
 
-const test = [{from: "bob", message: "hello"},
-{from: "bob", to: "maaz", message: "hello"},
-{from: "bob", to: "maaz", message: "hello"},
-{from: "bob", to: "maaz", message: "hello"},
-{from: "maaz", to: "bob", message: "hello"},
-{from: "jacob", to: "maaz", message: "lol"},
-{from: "maaz", to: "jacob", message: "hi"},
-];
-
 const MessageDisplay = props => {
-  const [messageHistory, setMessageHistory] = useState(test);
+  const [messageHistory, setMessageHistory] = useState([]);
+
+  const displayRef = useRef(null);
+
+  useEffect(() => {
+    displayRef.current.scrollTop = displayRef.current.scrollHeight;
+    console.log("scrolled")
+  }, [messageHistory, props.selected]);
 
   useWebSocket(process.env.REACT_APP_WS_URL, {
     share: true,
@@ -39,11 +37,11 @@ const MessageDisplay = props => {
   }
 
   return (
-    <div className="border border-black rounded h-[250px] overflow-auto">
+    <div className="border border-black rounded h-[250px] overflow-auto" ref={displayRef}>
       <ul>
         {messageHistory.filter(displayFilter).map((m, i) => 
           <li key={i}>
-            <span className={`${m.from === props.name ? 'text-blue-700' : 'text-red-700'}`}>
+            <span className={`${m.from === props.name ? 'text-blue-700' : 'text-red-700'} break-all`}>
               {m.from}: {m.message}
             </span>
           </li>

@@ -22,7 +22,8 @@ const App = () => {
     filter: m => {
       const event = JSON.parse(m.data);
       return event.type === "register";
-    }
+    },
+    shouldReconnect: () => true,
   });
 
   const connectionStatus = {
@@ -41,10 +42,11 @@ const App = () => {
   return (
     <div className="ml-2 mt-4">
     {
-      userID === -1 ? (
+      userID < 0 ? (
         <Register
           handleClickRegister={n => handleClickRegister(n)}
           connectionStatus={connectionStatus}
+          duplicate={userID === -2}
         />
       ) : (
         <Main

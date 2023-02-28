@@ -21,6 +21,9 @@ const Main = props => {
       if (event.type === "users") {
         console.log(event);
         setUsers(event.value);
+        if (!event.value.includes(selected)) {
+          setSelected(null);
+        }
       }
     },
     filter: m => {
@@ -29,11 +32,16 @@ const Main = props => {
     }
   });
 
+  const onSelect = name => {
+    if (selected === name) setSelected(null);
+    else setSelected(name);
+  }
+
   return (
     <div className="flex flex-row gap-6">
       <UserList
         users={users.filter(user => user !== props.name)}
-        onSelect={name => setSelected(name)}
+        onSelect={name => onSelect(name)}
         selected={selected}
       />
       <MessageWindow 
