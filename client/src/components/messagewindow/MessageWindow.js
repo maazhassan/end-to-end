@@ -8,7 +8,10 @@ const MessageWindow = props => {
         name={props.name}
         selected={props.selected}
       />
-      <MessageInput />
+      <MessageInput 
+        name={props.name}
+        selected={props.selected}
+      />
     </div>
     
   )

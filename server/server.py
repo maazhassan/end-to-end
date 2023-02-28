@@ -40,6 +40,7 @@ async def messages(websocket):
         # Listen to incoming messages
         async for message in websocket:
             print(f"recieved message from {name}: {message}")
+            websockets.send()
     
     except websockets.exceptions.ConnectionClosedOK:
         print("Connection closed without errors.")

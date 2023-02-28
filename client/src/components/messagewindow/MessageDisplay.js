@@ -33,10 +33,15 @@ const MessageDisplay = props => {
     }
   });
 
+  const displayFilter = m => {
+    return (m.from === props.selected && m.to === props.name)
+    || (m.from === props.name && m.to === props.selected);
+  }
+
   return (
     <div className="border border-black rounded h-[250px] overflow-auto">
       <ul>
-        {messageHistory.filter(m => m.from === props.selected || m.to === props.selected).map((m, i) => 
+        {messageHistory.filter(displayFilter).map((m, i) => 
           <li key={i}>
             <span className={`${m.from === props.name ? 'text-blue-700' : 'text-red-700'}`}>
               {m.from}: {m.message}
