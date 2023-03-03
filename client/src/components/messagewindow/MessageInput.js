@@ -14,23 +14,29 @@ const MessageInput = props => {
   });
 
   const sendMessage = () => {
-    sendJsonMessage({type: "message", from: props.name, to: props.selected, message: text});
-    setText('');
-    textAreaRef.current.focus();
+    if (text.length !== 0) {
+      sendJsonMessage({type: "message", from: props.name, to: props.selected, message: text});
+      textAreaRef.current.textContent = "";
+      textAreaRef.current.focus();
+    }
+  }
+
+  const handleEnter = e => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+    return;
   }
 
   return (
     <div className={`flex flex-row mt-2 ${props.selected ? '' : 'pointer-events-none'}`}>
-      <textarea
-        className="border border-black focus:bg-gray-100 focus:outline-none rounded max-h-36"
-        maxLength={2000}
-        cols={50}
-        rows={1}
-        wrap="soft"
-        placeholder="Type here..."
-        value={text}
-        onChange={e => setText(e.target.value)}
+      <div
+        className="border border-black focus:bg-gray-100 focus:outline-none rounded max-h-36 w-[90%] overflow-auto"
+        contentEditable={true}
+        onInput={e => setText(e.target.textContent)}
         ref={textAreaRef}
+        onKeyDown={e => handleEnter(e)}
       />
       <button 
         className="border border-black rounded bg-blue-300 ml-2 disabled:bg-gray-300 grow self-start"
