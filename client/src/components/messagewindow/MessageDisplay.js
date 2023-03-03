@@ -41,7 +41,7 @@ const MessageDisplay = props => {
       <ul>
         {messageHistory.filter(displayFilter).map((m, i) => 
           <li key={i}>
-            <span className={`${m.from === props.name ? 'text-blue-700' : 'text-red-700'} break-all`}>
+            <span className={`${m.from === props.name ? 'text-blue-700' : 'text-red-700'} break-all whitespace-pre-wrap`}>
               {m.from}: {m.message}
             </span>
           </li>

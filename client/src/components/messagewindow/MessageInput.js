@@ -32,7 +32,7 @@ const MessageInput = props => {
   return (
     <div className={`flex flex-row mt-2 ${props.selected ? '' : 'pointer-events-none'}`}>
       <div
-        className="border border-black focus:bg-gray-100 focus:outline-none rounded max-h-36 w-[90%] overflow-auto"
+        className="border border-black focus:bg-gray-100 focus:outline-none rounded max-h-36 w-[90%] overflow-auto whitespace-pre-wrap"
         contentEditable={true}
         onInput={e => setText(e.target.textContent)}
         ref={textAreaRef}
