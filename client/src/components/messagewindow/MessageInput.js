@@ -17,6 +17,7 @@ const MessageInput = props => {
     if (text.length !== 0) {
       sendJsonMessage({type: "message", from: props.name, to: props.selected, message: text});
       textAreaRef.current.textContent = "";
+      setText("");
       textAreaRef.current.focus();
     }
   }
