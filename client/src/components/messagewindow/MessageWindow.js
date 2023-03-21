@@ -7,10 +7,14 @@ const MessageWindow = props => {
       <MessageDisplay 
         name={props.name}
         selected={props.selected}
+        aesKey={props.aesKey}
+        iv={props.iv}
       />
       <MessageInput 
         name={props.name}
         selected={props.selected}
+        aesKey={props.aesKey}
+        iv={props.iv}
       />
     </div>
     

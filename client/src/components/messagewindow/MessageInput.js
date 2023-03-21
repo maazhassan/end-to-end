@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { useWebSocket } from "react-use-websocket/dist/lib/use-websocket";
+import { AES, enc } from "crypto-js";
 
 const MessageInput = props => {
   const [text, setText] = useState('');
@@ -15,7 +16,9 @@ const MessageInput = props => {
 
   const sendMessage = () => {
     if (text.length !== 0) {
-      sendJsonMessage({type: "message", from: props.name, to: props.selected, message: text});
+      const encrypted = AES.encrypt(text, props.aesKey, { iv: props.iv });
+      const cipherText = encrypted.ciphertext.toString(enc.Base64);
+      sendJsonMessage({type: "message", from: props.name, to: props.selected, message: cipherText});
       textAreaRef.current.textContent = "";
       setText("");
       textAreaRef.current.focus();

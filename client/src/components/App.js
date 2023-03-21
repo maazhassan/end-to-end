@@ -6,6 +6,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 const App = () => {
   const [userID, setUserID] = useState(-1);
   const [name, setName] = useState("");
+  const [prime, setPrime] = useState(0);
 
   const { sendJsonMessage, readyState } = useWebSocket(process.env.REACT_APP_WS_URL, {
     share: true,
@@ -15,8 +16,8 @@ const App = () => {
     onMessage: m => {
       const event = JSON.parse(m.data);
       if (event.type === "register") {
-        console.log(event);
         setUserID(event.id);
+        setPrime(event.prime);
       }
     },
     filter: m => {
@@ -51,6 +52,7 @@ const App = () => {
       ) : (
         <Main
           name={name}
+          prime={prime}
         />
       )
     }
