@@ -4,6 +4,7 @@ import MessageWindow from "./messagewindow/MessageWindow";
 import UserList from "./UserList";
 import { createDiffieHellman } from "diffie-hellman";
 import { MD5, enc } from "crypto-js";
+import Tutorial from "./tutorial/Tutorial";
 window.Buffer = window.Buffer || require("buffer").Buffer;
 
 const Main = props => {
@@ -12,8 +13,12 @@ const Main = props => {
   const [DH, setDH] = useState(null);
   const [aesKey, setKey] = useState(null);
   const [IV, setIV] = useState(null);
+  const [showTut, setShowTut] = useState(props.tut);
+  const [dhSecret, setdhSecret] = useState(null);
+  const [firstMessage, setFirstMessage] = useState(null);
 
   const initRef = useRef(false);
+  const firstSelectRef = useRef(false);
 
   // eslint-disable-next-line
   useEffect(() => {
@@ -35,7 +40,6 @@ const Main = props => {
     onMessage: m => {
       const event = JSON.parse(m.data);
       if (event.type === "users") {
-        console.log(event);
         setUsers(event.value);
         if (!Object.keys(event.value).includes(selected)) {
           setSelected(null);
@@ -49,13 +53,18 @@ const Main = props => {
   });
 
   const onSelect = name => {
-    if (selected === name){
+    if (!firstSelectRef.current) {
+      firstSelectRef.current = true;
+    }
+
+    if (selected === name) {
       setSelected(null);
     }
     else {
       setSelected(name);
       const buf = Buffer.from(users[name], "hex");
       const secret = DH.computeSecret(buf).toString("hex");
+      setdhSecret(secret);
       // All this logging to get this to work oof
       // console.log(users[name]);
       // console.log(users[name].length)
@@ -78,18 +87,38 @@ const Main = props => {
   }
 
   return (
-    <div className="flex flex-row gap-6">
-      <UserList
-        users={Object.keys(users).filter(user => user !== props.name)}
-        onSelect={name => onSelect(name)}
-        selected={selected}
-      />
-      <MessageWindow 
-        name={props.name}
-        selected={selected}
-        aesKey={aesKey}
-        iv={IV}
-      />
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-row gap-6">
+        <UserList
+          users={Object.keys(users).filter(user => user !== props.name)}
+          onSelect={name => onSelect(name)}
+          selected={selected}
+        />
+        <MessageWindow 
+          name={props.name}
+          selected={selected}
+          aesKey={aesKey}
+          iv={IV}
+          setFirstMessage={x => setFirstMessage(x)}
+        />
+      </div>
+      {
+        showTut ? (
+          <Tutorial 
+            className="ml-1"
+            setShowTut={x => setShowTut(x)}
+            prime={props.prime}
+            privateKey={DH?.getPrivateKey("hex")}
+            publicKey={DH?.getPublicKey("hex")}
+            users={users}
+            firstSelect={firstSelectRef.current}
+            selected={selected}
+            dhSecret={dhSecret}
+            firstMessage={firstMessage}
+            aesKey={enc.Hex.stringify(aesKey ? aesKey : "")} // hack to wait for async ops
+          /> 
+        ) : null
+      }
     </div>
   );
 }

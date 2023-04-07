@@ -15,6 +15,7 @@ const MessageWindow = props => {
         selected={props.selected}
         aesKey={props.aesKey}
         iv={props.iv}
+        setFirstMessage={x => props.setFirstMessage(x)}
       />
     </div>
     

@@ -23,6 +23,12 @@ const Register = props => {
           A client with this name is already connected. Try again.
         </span>
       }
+      <input
+        className="ml-5"
+        type="checkbox"
+        onChange={e => props.handleClickTutorial(e.target.checked)}
+      />
+      <label> Show tutorial?</label>
       <p className={`${props.connectionStatus === "Open" ? "text-green-600" : "text-red-600"}`}>
         {props.connectionStatus === "Open" ? "Connected." : "Connecting..."}
       </p>

@@ -6,6 +6,7 @@ const MessageInput = props => {
   const [text, setText] = useState('');
 
   const textAreaRef = useRef(null);
+  const firstMessageRef = useRef(false);
 
   const { sendJsonMessage } = useWebSocket(process.env.REACT_APP_WS_URL, {
     share: true,
@@ -18,6 +19,12 @@ const MessageInput = props => {
     if (text.length !== 0) {
       const encrypted = AES.encrypt(text, props.aesKey, { iv: props.iv });
       const cipherText = encrypted.ciphertext.toString(enc.Base64);
+
+      if (!firstMessageRef.current) {
+        props.setFirstMessage(cipherText);
+        firstMessageRef.current = true;
+      }
+
       sendJsonMessage({type: "message", from: props.name, to: props.selected, message: cipherText});
       textAreaRef.current.textContent = "";
       setText("");
@@ -37,7 +44,7 @@ const MessageInput = props => {
     <div className={`flex flex-row mt-2 ${props.selected ? '' : 'pointer-events-none'}`}>
       <div
         className="border border-black focus:bg-gray-100 focus:outline-none rounded max-h-36 w-[90%] overflow-auto whitespace-pre-wrap"
-        contentEditable={true}
+        contentEditable={props.selected ? true : false}
         onInput={e => setText(e.target.textContent)}
         ref={textAreaRef}
         onKeyDown={e => handleEnter(e)}

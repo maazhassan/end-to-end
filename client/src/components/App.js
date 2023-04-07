@@ -7,6 +7,7 @@ const App = () => {
   const [userID, setUserID] = useState(-1);
   const [name, setName] = useState("");
   const [prime, setPrime] = useState(0);
+  const [tut, setTut] = useState(false);
 
   const { sendJsonMessage, readyState } = useWebSocket(process.env.REACT_APP_WS_URL, {
     share: true,
@@ -40,12 +41,17 @@ const App = () => {
     setName(n);
   }
 
+  const handleClickTutorial = v => {
+    setTut(v);
+  }
+
   return (
     <div className="ml-2 mt-4">
     {
       userID < 0 ? (
         <Register
           handleClickRegister={n => handleClickRegister(n)}
+          handleClickTutorial={v => handleClickTutorial(v)}
           connectionStatus={connectionStatus}
           duplicate={userID === -2}
         />
@@ -53,6 +59,7 @@ const App = () => {
         <Main
           name={name}
           prime={prime}
+          tut={tut}
         />
       )
     }

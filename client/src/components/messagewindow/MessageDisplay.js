@@ -16,7 +16,6 @@ const MessageDisplay = props => {
     onMessage: m => {
       const event = JSON.parse(m.data);
       if (event.type === "message") {
-        console.log(event);
         setMessageHistory(
           [
             ...messageHistory,
